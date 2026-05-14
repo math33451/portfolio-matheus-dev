@@ -1,0 +1,1447 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Matheus de Oliveira — Desenvolvedor Fullstack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Reset & Tokens ─────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black:   #0a0a0a;
+      --white:   #f5f5f5;
+      --gray-1:  #111111;
+      --gray-2:  #1a1a1a;
+      --gray-3:  #252525;
+      --gray-4:  #333333;
+      --gray-5:  #888888;
+      --gray-6:  #bbbbbb;
+      --accent:  #e63c2f;        /* vermelho */
+      --accent2: #1a6bff;        /* azul */
+      --mono:    'JetBrains Mono', monospace;
+      --sans:    'Inter', sans-serif;
+      --nav-h:   60px;
+    }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      font-family: var(--sans);
+      background: var(--black);
+      color: var(--white);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    ::selection { background: var(--accent); color: #fff; }
+
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--gray-1); }
+    ::-webkit-scrollbar-thumb { background: var(--gray-4); border-radius: 99px; }
+
+    /* ── Nav ────────────────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: var(--nav-h);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5%;
+      background: rgba(10,10,10,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--gray-3);
+      transition: border-color 0.3s;
+    }
+
+    .nav-logo {
+      font-family: var(--mono);
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--white);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-logo span { color: var(--accent); }
+
+    .nav-links {
+      display: flex; gap: 2rem; list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--gray-5);
+      text-decoration: none;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--white); }
+
+    .nav-cta {
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 8px 18px;
+      border: 1px solid var(--accent);
+      border-radius: 3px;
+      color: var(--accent);
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .nav-cta:hover { background: var(--accent); color: #fff; }
+
+    .hamburger {
+      display: none; flex-direction: column; gap: 5px;
+      background: none; border: none; cursor: pointer; padding: 4px;
+    }
+    .hamburger span {
+      display: block; width: 22px; height: 1.5px;
+      background: var(--white); transition: all 0.3s;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    .mobile-menu {
+      display: none;
+      position: fixed; top: var(--nav-h); left: 0; right: 0;
+      background: var(--gray-1);
+      border-bottom: 1px solid var(--gray-3);
+      padding: 1.5rem 5%;
+      flex-direction: column; gap: 1.2rem;
+      z-index: 99;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-size: 0.9rem; font-weight: 500;
+      color: var(--gray-6); text-decoration: none;
+      letter-spacing: 0.04em; text-transform: uppercase;
+    }
+    .mobile-menu a:hover { color: var(--white); }
+
+    /* ── Sections ───────────────────────────────────────────── */
+    section { padding: 100px 5%; }
+    .container { max-width: 960px; margin: 0 auto; }
+
+    .section-label {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: var(--accent);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1; max-width: 60px;
+      height: 1px; background: var(--accent);
+    }
+
+    h2 {
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+    }
+
+    /* ── Hero ───────────────────────────────────────────────── */
+    #hero {
+      min-height: 100vh;
+      display: flex; align-items: center;
+      padding-top: calc(var(--nav-h) + 40px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg-line {
+      position: absolute;
+      top: 0; right: 10%;
+      width: 1px; height: 100%;
+      background: linear-gradient(to bottom, transparent, var(--gray-3) 30%, var(--gray-3) 70%, transparent);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .hero-tag {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 1.2rem;
+    }
+
+    .hero-name {
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+      margin-bottom: 0.3rem;
+    }
+
+    .hero-role {
+      font-size: clamp(1rem, 2vw, 1.3rem);
+      font-weight: 300;
+      color: var(--gray-5);
+      letter-spacing: -0.01em;
+      margin-bottom: 1.8rem;
+    }
+
+    .hero-role strong {
+      color: var(--gray-6);
+      font-weight: 500;
+    }
+
+    .hero-desc {
+      font-size: 0.95rem;
+      color: var(--gray-5);
+      line-height: 1.75;
+      max-width: 500px;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 0.82rem; font-weight: 600;
+      padding: 12px 24px;
+      border-radius: 3px;
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      transition: all 0.2s;
+      cursor: pointer; border: none;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+    .btn-primary:hover { background: #cc3326; transform: translateY(-1px); }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--white);
+      border: 1px solid var(--gray-4);
+    }
+    .btn-outline:hover { border-color: var(--white); transform: translateY(-1px); }
+
+    .hero-visual {
+      display: flex; flex-direction: column; align-items: flex-end; gap: 10px;
+    }
+
+    .stat-card {
+      background: var(--gray-2);
+      border: 1px solid var(--gray-3);
+      border-radius: 6px;
+      padding: 14px 20px;
+      text-align: right;
+      min-width: 150px;
+    }
+
+    .stat-card .num {
+      font-family: var(--mono);
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1;
+    }
+
+    .stat-card .num span { color: var(--accent); }
+
+    .stat-card .lbl {
+      font-size: 0.72rem;
+      color: var(--gray-5);
+      margin-top: 4px;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── Sobre ──────────────────────────────────────────────── */
+    #sobre { background: var(--gray-1); }
+
+    .sobre-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+      margin-top: 2.5rem;
+    }
+
+    .sobre-text p {
+      font-size: 0.95rem;
+      color: var(--gray-5);
+      line-height: 1.8;
+      margin-bottom: 1rem;
+    }
+
+    .sobre-text p strong { color: var(--gray-6); font-weight: 500; }
+
+    .sobre-info { display: flex; flex-direction: column; gap: 0; }
+
+    .info-row {
+      display: flex; align-items: flex-start;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--gray-3);
+      gap: 1rem;
+    }
+    .info-row:first-child { border-top: 1px solid var(--gray-3); }
+
+    .info-label {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      min-width: 80px;
+      padding-top: 2px;
+    }
+
+    .info-value {
+      font-size: 0.88rem;
+      color: var(--gray-6);
+      line-height: 1.5;
+    }
+
+    .info-value a {
+      color: var(--accent2);
+      text-decoration: none;
+    }
+    .info-value a:hover { text-decoration: underline; }
+
+    /* ── Stacks ─────────────────────────────────────────────── */
+    #stacks { background: var(--black); }
+
+    .stacks-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1px;
+      border: 1px solid var(--gray-3);
+      border-radius: 6px;
+      overflow: hidden;
+      margin-top: 2.5rem;
+    }
+
+    .stack-group {
+      background: var(--gray-1);
+      padding: 24px;
+    }
+
+    .stack-group-title {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      font-weight: 500;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .stack-tags {
+      display: flex; flex-wrap: wrap; gap: 6px;
+    }
+
+    .tag {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      padding: 4px 10px;
+      border-radius: 2px;
+      background: var(--gray-3);
+      color: var(--gray-6);
+      border: 1px solid var(--gray-4);
+      letter-spacing: 0.02em;
+    }
+
+    .tag.highlight {
+      background: rgba(230, 60, 47, 0.1);
+      color: #f08077;
+      border-color: rgba(230, 60, 47, 0.3);
+    }
+
+    .tag.blue {
+      background: rgba(26, 107, 255, 0.1);
+      color: #7aabff;
+      border-color: rgba(26, 107, 255, 0.3);
+    }
+
+    /* ── Experiência ────────────────────────────────────────── */
+    #experiencia { background: var(--gray-1); }
+
+    .timeline {
+      margin-top: 2.5rem;
+      position: relative;
+      padding-left: 2rem;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 8px; bottom: 0;
+      width: 1px;
+      background: var(--gray-3);
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 3rem;
+      padding-bottom: 0.5rem;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -2rem;
+      top: 8px;
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      transform: translateX(-3px);
+    }
+
+    .timeline-header {
+      display: flex; align-items: flex-start;
+      justify-content: space-between; gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.5rem;
+    }
+
+    .timeline-company {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--white);
+      letter-spacing: -0.01em;
+    }
+
+    .timeline-period {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--accent);
+      letter-spacing: 0.06em;
+      padding-top: 3px;
+      white-space: nowrap;
+    }
+
+    .timeline-role {
+      font-size: 0.82rem;
+      color: var(--gray-5);
+      margin-bottom: 1rem;
+      font-weight: 400;
+    }
+
+    .timeline-items {
+      list-style: none;
+      display: flex; flex-direction: column; gap: 6px;
+    }
+
+    .timeline-items li {
+      font-size: 0.88rem;
+      color: var(--gray-5);
+      line-height: 1.6;
+      padding-left: 1rem;
+      position: relative;
+    }
+
+    .timeline-items li::before {
+      content: '▸';
+      position: absolute; left: 0;
+      color: var(--accent);
+      font-size: 0.7rem;
+      top: 3px;
+    }
+
+    /* ── Projetos ───────────────────────────────────────────── */
+    #projetos { background: var(--black); }
+
+    .projetos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1px;
+      margin-top: 2.5rem;
+      border: 1px solid var(--gray-3);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .projeto-card {
+      background: var(--gray-1);
+      padding: 28px;
+      display: flex; flex-direction: column;
+      text-decoration: none;
+      transition: background 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .projeto-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s;
+    }
+
+    .projeto-card:hover { background: var(--gray-2); }
+    .projeto-card:hover::after { transform: scaleX(1); }
+
+    .projeto-header {
+      display: flex; justify-content: space-between;
+      align-items: flex-start; margin-bottom: 1rem;
+    }
+
+    .projeto-icon {
+      width: 36px; height: 36px;
+      border: 1px solid var(--gray-3);
+      border-radius: 4px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+    }
+
+    .projeto-link-icon {
+      font-size: 0.8rem;
+      color: var(--gray-5);
+      transition: color 0.2s;
+    }
+
+    .projeto-card:hover .projeto-link-icon { color: var(--accent); }
+
+    .projeto-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 6px;
+      letter-spacing: -0.01em;
+    }
+
+    .projeto-desc {
+      font-size: 0.83rem;
+      color: var(--gray-5);
+      line-height: 1.65;
+      flex: 1;
+      margin-bottom: 1.2rem;
+    }
+
+    .projeto-tags {
+      display: flex; flex-wrap: wrap; gap: 5px;
+    }
+
+    .projeto-tag {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      padding: 3px 8px;
+      border-radius: 2px;
+      background: var(--gray-3);
+      color: var(--gray-6);
+      letter-spacing: 0.02em;
+    }
+
+    /* ── Formação ───────────────────────────────────────────── */
+    #formacao { background: var(--gray-1); }
+
+    .formacao-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      margin-top: 2.5rem;
+      border: 1px solid var(--gray-3);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .formacao-card {
+      background: var(--gray-2);
+      padding: 28px;
+    }
+
+    .formacao-year {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      margin-bottom: 0.7rem;
+    }
+
+    .formacao-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 4px;
+      letter-spacing: -0.01em;
+    }
+
+    .formacao-inst {
+      font-size: 0.8rem;
+      color: var(--gray-5);
+      margin-bottom: 0.8rem;
+    }
+
+    .formacao-desc {
+      font-size: 0.82rem;
+      color: var(--gray-5);
+      line-height: 1.6;
+    }
+
+    /* ── Contato ────────────────────────────────────────────── */
+    #contato {
+      background: var(--black);
+      text-align: center;
+    }
+
+    .contato-inner {
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    .contato-inner h2 { margin-bottom: 1rem; }
+
+    .contato-inner p {
+      font-size: 0.95rem;
+      color: var(--gray-5);
+      line-height: 1.75;
+      margin-bottom: 2.5rem;
+    }
+
+    .contato-links {
+      display: flex; justify-content: center;
+      gap: 1rem; flex-wrap: wrap;
+    }
+
+    .contato-item {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 0.82rem;
+      color: var(--gray-5);
+      text-decoration: none;
+      padding: 10px 16px;
+      border: 1px solid var(--gray-3);
+      border-radius: 3px;
+      transition: all 0.2s;
+      letter-spacing: 0.02em;
+    }
+
+    .contato-item:hover {
+      border-color: var(--accent);
+      color: var(--white);
+    }
+
+    .contato-item svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+    /* ── Footer ─────────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--gray-3);
+      padding: 24px 5%;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 10px;
+    }
+
+    footer p {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--gray-5);
+      letter-spacing: 0.04em;
+    }
+
+    footer span { color: var(--accent); }
+
+    /* ── Divider ─────────────────────────────────────────────── */
+    .divider {
+      height: 1px;
+      background: var(--gray-3);
+      margin: 0 5%;
+    }
+
+    /* ── Animations ─────────────────────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── Responsive ─────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      section { padding: 72px 5%; }
+      .nav-links, .nav-cta { display: none; }
+      .hamburger { display: flex; }
+
+      .hero-grid { grid-template-columns: 1fr; }
+      .hero-visual { flex-direction: row; align-items: flex-start; flex-wrap: wrap; }
+      .stat-card { min-width: 120px; }
+
+      .sobre-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .formacao-grid { grid-template-columns: 1fr; }
+      .stacks-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 480px) {
+      .hero-name { font-size: 2rem; }
+      .stacks-grid { grid-template-columns: 1fr; }
+      .projetos-grid { grid-template-columns: 1fr; }
+      .contato-links { flex-direction: column; align-items: center; }
+    }
+    /* ── Serviços ───────────────────────────────────────────── */
+    #servicos { background: var(--gray-1); }
+
+    .servicos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1px;
+      margin-top: 2.5rem;
+      border: 1px solid var(--gray-3);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .servico-card {
+      background: var(--gray-2);
+      padding: 28px;
+      display: flex; flex-direction: column; gap: 12px;
+      transition: background 0.2s;
+      position: relative;
+    }
+
+    .servico-card:hover { background: var(--gray-3); }
+
+    .servico-num {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+    }
+
+    .servico-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--white);
+      letter-spacing: -0.02em;
+      line-height: 1.3;
+    }
+
+    .servico-desc {
+      font-size: 0.85rem;
+      color: var(--gray-5);
+      line-height: 1.7;
+      flex: 1;
+    }
+
+    .servico-tags {
+      display: flex; flex-wrap: wrap; gap: 5px;
+      margin-top: 4px;
+    }
+
+    /* ── Landing Pages ──────────────────────────────────────── */
+    #landing-pages { background: var(--black); }
+
+    .lp-subtitle {
+      font-size: 0.92rem;
+      color: var(--gray-5);
+      margin-top: 0.5rem;
+      margin-bottom: 2.5rem;
+      line-height: 1.6;
+    }
+
+    .lp-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 16px;
+    }
+
+    .lp-card {
+      background: var(--gray-1);
+      border: 1px solid var(--gray-3);
+      border-radius: 8px;
+      overflow: hidden;
+      text-decoration: none;
+      display: flex; flex-direction: column;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .lp-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+    .lp-placeholder { cursor: default; }
+    .lp-placeholder:hover { transform: none; border-color: var(--gray-3); }
+
+    .lp-preview {
+      background: var(--gray-2);
+      border-bottom: 1px solid var(--gray-3);
+      padding: 12px;
+    }
+
+    .lp-browser-bar {
+      display: flex; align-items: center; gap: 6px;
+      margin-bottom: 10px;
+    }
+    .lp-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--gray-4);
+    }
+    .lp-dot:nth-child(1) { background: #ff5f57; }
+    .lp-dot:nth-child(2) { background: #febc2e; }
+    .lp-dot:nth-child(3) { background: #28c840; }
+    .lp-url {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      color: var(--gray-5);
+      background: var(--gray-3);
+      padding: 3px 10px;
+      border-radius: 3px;
+      flex: 1;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .lp-mockup {
+      background: var(--gray-3);
+      border-radius: 4px;
+      overflow: hidden;
+      height: 140px;
+      padding: 12px;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+
+    .lp-mock-hero {
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .lp-mock-tag {
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      color: var(--accent);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .lp-mock-h1 {
+      height: 10px; width: 70%;
+      background: var(--gray-5); border-radius: 2px;
+    }
+    .lp-mock-h2 {
+      height: 7px; width: 50%;
+      background: var(--gray-4); border-radius: 2px;
+    }
+    .lp-mock-btn {
+      height: 18px; width: 80px;
+      background: var(--accent);
+      border-radius: 2px;
+      margin-top: 4px;
+      opacity: 0.8;
+    }
+    .lp-mock-cards {
+      display: flex; gap: 6px; flex: 1;
+    }
+    .lp-mock-card {
+      flex: 1; background: var(--gray-4);
+      border-radius: 3px;
+    }
+
+    .lp-screenshot {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      object-position: top;
+      display: block;
+      border-radius: 4px;
+    }
+
+    .lp-preview-empty .lp-mock-empty {
+      height: 140px;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--gray-3);
+      border-radius: 4px;
+    }
+    .lp-mock-empty span {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--gray-4);
+      letter-spacing: 0.1em;
+    }
+
+    .lp-info {
+      padding: 18px 20px;
+      display: flex; align-items: flex-start;
+      justify-content: space-between; gap: 12px;
+    }
+    .lp-info-left { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+
+    .lp-title {
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--white);
+      letter-spacing: -0.01em;
+    }
+    .lp-desc {
+      font-size: 0.8rem;
+      color: var(--gray-5);
+      line-height: 1.5;
+    }
+    .lp-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 2px; }
+
+    .lp-arrow {
+      font-size: 0.9rem;
+      color: var(--gray-5);
+      flex-shrink: 0;
+      transition: color 0.2s;
+    }
+    .lp-card:hover .lp-arrow { color: var(--accent); }
+
+    .lp-cta {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 6px 14px;
+      border: 1px solid var(--accent);
+      border-radius: 3px;
+      color: var(--accent);
+      text-decoration: none;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: background 0.2s, color 0.2s;
+    }
+    .lp-cta:hover { background: var(--accent); color: #fff; }
+
+    @media (max-width: 480px) {
+      .lp-grid { grid-template-columns: 1fr; }
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- ── Nav ──────────────────────────────────────────────── -->
+  <nav>
+    <a href="#hero" class="nav-logo">matheus<span>.</span>dev</a>
+
+    <ul class="nav-links">
+      <li><a href="#sobre">Sobre</a></li>
+      <li><a href="#servicos">Serviços</a></li>
+      <li><a href="#stacks">Stacks</a></li>
+      <li><a href="#projetos">Projetos</a></li>
+      <li><a href="#landing-pages">Landing Pages</a></li>
+      <li><a href="#contato">Contato</a></li>
+    </ul>
+
+    <a href="#contato" class="nav-cta">Falar sobre projeto</a>
+
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="#sobre"    onclick="closeMobile()">Sobre</a>
+    <a href="#servicos" onclick="closeMobile()">Serviços</a>
+    <a href="#stacks"   onclick="closeMobile()">Stacks</a>
+    <a href="#projetos"      onclick="closeMobile()">Projetos</a>
+    <a href="#landing-pages" onclick="closeMobile()">Landing Pages</a>
+    <a href="#contato"       onclick="closeMobile()">Contato</a>
+  </div>
+
+  <!-- ── Hero ─────────────────────────────────────────────── -->
+  <section id="hero">
+    <div class="hero-bg-line"></div>
+    <div class="container">
+      <div class="hero-grid">
+        <div>
+          <p class="hero-tag">// desenvolvedor disponível para projetos freelance</p>
+          <h1 class="hero-name">Matheus<br>de Oliveira</h1>
+          <p class="hero-role">Desenvolvedor <strong>Fullstack</strong> · Java & Vue.js</p>
+          <p class="hero-desc">
+            Transformo ideias em sistemas web completos — do banco de dados à interface.
+            APIs robustas, aplicações escaláveis e entrega no prazo.
+            Mais de 3 anos desenvolvendo para empresas como a Tokio Marine Seguradora.
+          </p>
+          <div class="hero-actions">
+            <a href="#contato" class="btn btn-primary">Falar sobre meu projeto</a>
+            <a href="#projetos" class="btn btn-outline">Ver projetos</a>
+          </div>
+        </div>
+
+        <div class="hero-visual">
+          <div class="stat-card">
+            <p class="num">3<span>+</span></p>
+            <p class="lbl">anos de experiência</p>
+          </div>
+          <div class="stat-card">
+            <p class="num">Full<span>stack</span></p>
+            <p class="lbl">backend + frontend</p>
+          </div>
+          <div class="stat-card">
+            <p class="num">SP</p>
+            <p class="lbl">remoto ou presencial</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ── Sobre ─────────────────────────────────────────────── -->
+  <section id="sobre">
+    <div class="container">
+      <p class="section-label reveal">sobre mim</p>
+      <h2 class="reveal">Quem vai cuidar do seu projeto</h2>
+      <div class="sobre-grid">
+        <div class="sobre-text reveal">
+          <p>
+            Sou desenvolvedor fullstack com mais de 3 anos construindo sistemas para ambientes
+            corporativos de grande porte. Trabalho com <strong>Java (Spring Boot)</strong> no backend
+            e <strong>Vue.js</strong> no frontend — do zero à produção.
+          </p>
+          <p>
+            Tenho experiência real com microsserviços, APIs REST, bancos relacionais e NoSQL,
+            e deploy em cloud. Isso significa que posso entregar um sistema completo e escalável,
+            não apenas uma tela bonita ou uma API isolada.
+          </p>
+          <p>
+            Atendo projetos de forma remota, com comunicação clara e entregas organizadas.
+            Se você tem uma ideia ou um problema para resolver, <strong>me conta o que precisa</strong>.
+          </p>
+        </div>
+
+        <div class="sobre-info reveal">
+          <div class="info-row">
+            <span class="info-label">Local</span>
+            <span class="info-value">São Paulo – SP · remoto</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Experiência</span>
+            <span class="info-value">3+ anos · sistemas corporativos</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Referência</span>
+            <span class="info-value">Tokio Marine Seguradora</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">E-mail</span>
+            <span class="info-value">
+              <a href="mailto:murilomatheus20@gmail.com">murilomatheus20@gmail.com</a>
+            </span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">LinkedIn</span>
+            <span class="info-value">
+              <a href="https://linkedin.com/in/matheus-bezerra-oliveira" target="_blank" rel="noopener">
+                matheus-bezerra-oliveira
+              </a>
+            </span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Telefone</span>
+            <span class="info-value">(11) 95746-9220</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ── Stacks ─────────────────────────────────────────────── -->
+  <section id="stacks">
+    <div class="container">
+      <p class="section-label reveal">habilidades</p>
+      <h2 class="reveal">Stack técnico</h2>
+      <div class="stacks-grid reveal">
+
+        <div class="stack-group">
+          <p class="stack-group-title">Backend</p>
+          <div class="stack-tags">
+            <span class="tag highlight">Java 17</span>
+            <span class="tag highlight">Spring Boot</span>
+            <span class="tag">Java 8/11</span>
+            <span class="tag">JSF</span>
+            <span class="tag">APIs REST</span>
+            <span class="tag">Microsserviços</span>
+          </div>
+        </div>
+
+        <div class="stack-group">
+          <p class="stack-group-title">Frontend</p>
+          <div class="stack-tags">
+            <span class="tag blue">Vue.js 3</span>
+            <span class="tag blue">JavaScript</span>
+            <span class="tag">jQuery</span>
+            <span class="tag">HTML5</span>
+            <span class="tag">CSS3</span>
+          </div>
+        </div>
+
+        <div class="stack-group">
+          <p class="stack-group-title">Banco de dados</p>
+          <div class="stack-tags">
+            <span class="tag highlight">Oracle SQL</span>
+            <span class="tag">MongoDB</span>
+            <span class="tag">PostgreSQL</span>
+            <span class="tag">H2</span>
+          </div>
+        </div>
+
+        <div class="stack-group">
+          <p class="stack-group-title">DevOps & Cloud</p>
+          <div class="stack-tags">
+            <span class="tag">Git</span>
+            <span class="tag">GitHub</span>
+            <span class="tag">AWS</span>
+            <span class="tag">Docker</span>
+            <span class="tag">Render</span>
+            <span class="tag">Vercel</span>
+          </div>
+        </div>
+
+        <div class="stack-group">
+          <p class="stack-group-title">Metodologias</p>
+          <div class="stack-tags">
+            <span class="tag">Scrum</span>
+            <span class="tag">Kanban</span>
+            <span class="tag">Agile</span>
+          </div>
+        </div>
+
+        <div class="stack-group">
+          <p class="stack-group-title">Outros</p>
+          <div class="stack-tags">
+            <span class="tag">Arduino</span>
+            <span class="tag">C++</span>
+            <span class="tag">Python</span>
+            <span class="tag">Web Scraping</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ── Serviços ──────────────────────────────────────────── -->
+  <section id="servicos">
+    <div class="container">
+      <p class="section-label reveal">o que eu faço</p>
+      <h2 class="reveal">Como posso te ajudar</h2>
+      <div class="servicos-grid reveal">
+
+        <div class="servico-card">
+          <div class="servico-num">01</div>
+          <h3 class="servico-title">Sistemas web completos</h3>
+          <p class="servico-desc">
+            Desenvolvimento fullstack do zero: banco de dados, API REST no backend com Java e Spring Boot,
+            e interface moderna com Vue.js. Entrego o sistema pronto para produção.
+          </p>
+          <div class="servico-tags">
+            <span class="tag">Java</span>
+            <span class="tag">Spring Boot</span>
+            <span class="tag">Vue.js</span>
+            <span class="tag">PostgreSQL</span>
+          </div>
+        </div>
+
+        <div class="servico-card">
+          <div class="servico-num">02</div>
+          <h3 class="servico-title">APIs e integrações</h3>
+          <p class="servico-desc">
+            Criação de APIs REST robustas, integração com serviços externos, autenticação JWT
+            e arquitetura de microsserviços. Ideal para conectar sistemas ou expor dados.
+          </p>
+          <div class="servico-tags">
+            <span class="tag">REST API</span>
+            <span class="tag">JWT</span>
+            <span class="tag">Microsserviços</span>
+            <span class="tag">MongoDB</span>
+          </div>
+        </div>
+
+        <div class="servico-card">
+          <div class="servico-num">03</div>
+          <h3 class="servico-title">Automação e scripts</h3>
+          <p class="servico-desc">
+            Scripts de automação, web scraping e ferramentas para otimizar processos repetitivos.
+            Reduza tempo manual com soluções sob medida em Python ou Java.
+          </p>
+          <div class="servico-tags">
+            <span class="tag">Python</span>
+            <span class="tag">Web Scraping</span>
+            <span class="tag">Automação</span>
+          </div>
+        </div>
+
+        <div class="servico-card">
+          <div class="servico-num">04</div>
+          <h3 class="servico-title">Manutenção e evolução</h3>
+          <p class="servico-desc">
+            Tem um sistema legado ou com problemas? Faço diagnóstico, correção de bugs,
+            refatoração e adição de novas funcionalidades em projetos existentes.
+          </p>
+          <div class="servico-tags">
+            <span class="tag">Debugging</span>
+            <span class="tag">Refatoração</span>
+            <span class="tag">Legacy</span>
+          </div>
+        </div>
+
+        <div class="servico-card">
+          <div class="servico-num">05</div>
+          <h3 class="servico-title">Landing pages</h3>
+          <p class="servico-desc">
+            Páginas de conversão rápidas, responsivas e otimizadas para captar leads.
+            Ideal para lançamentos, campanhas e negócios que precisam de presença digital imediata.
+          </p>
+          <div class="servico-tags">
+            <span class="tag">HTML</span>
+            <span class="tag">CSS</span>
+            <span class="tag">JavaScript</span>
+            <span class="tag">Conversão</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ── Projetos ──────────────────────────────────────────── -->
+  <section id="projetos">
+    <div class="container">
+      <p class="section-label reveal">portfólio</p>
+      <h2 class="reveal">Projetos</h2>
+      <div class="projetos-grid reveal">
+
+        <a href="https://github.com/math33451/client-platform" target="_blank" rel="noopener" class="projeto-card">
+          <div class="projeto-header">
+            <div class="projeto-icon">🗂️</div>
+            <span class="projeto-link-icon">↗</span>
+          </div>
+          <p class="projeto-title">ClientHub</p>
+          <p class="projeto-desc">
+            Plataforma de cadastro de clientes com autenticação JWT, dashboard com métricas,
+            CRUD completo e deploy em produção com Render + Vercel + Neon PostgreSQL.
+          </p>
+          <div class="projeto-tags">
+            <span class="projeto-tag">Java 17</span>
+            <span class="projeto-tag">Spring Boot</span>
+            <span class="projeto-tag">Vue.js 3</span>
+            <span class="projeto-tag">PostgreSQL</span>
+            <span class="projeto-tag">JWT</span>
+          </div>
+        </a>
+
+        <a href="https://github.com/math33451/Amazon_Scrape" target="_blank" rel="noopener" class="projeto-card">
+          <div class="projeto-header">
+            <div class="projeto-icon">🔍</div>
+            <span class="projeto-link-icon">↗</span>
+          </div>
+          <p class="projeto-title">Amazon Scraper</p>
+          <p class="projeto-desc">
+            Ferramenta de web scraping para a Amazon Brasil. Extrai preços, avaliações e links
+            de produtos com múltiplas páginas, geração de CSV e rotação de User-Agent.
+          </p>
+          <div class="projeto-tags">
+            <span class="projeto-tag">Python</span>
+            <span class="projeto-tag">BeautifulSoup</span>
+            <span class="projeto-tag">Requests</span>
+            <span class="projeto-tag">CSV</span>
+          </div>
+        </a>
+
+        <div class="projeto-card" style="cursor:default;">
+          <div class="projeto-header">
+            <div class="projeto-icon">⚙️</div>
+          </div>
+          <p class="projeto-title">Mais em breve</p>
+          <p class="projeto-desc">
+            Novos projetos em desenvolvimento. Acompanhe meu GitHub para novidades.
+          </p>
+          <div class="projeto-tags">
+            <span class="projeto-tag">em desenvolvimento</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ── Landing Pages ─────────────────────────────────────── -->
+  <section id="landing-pages">
+    <div class="container">
+      <p class="section-label reveal">landing pages</p>
+      <h2 class="reveal">Páginas de conversão</h2>
+      <p class="lp-subtitle reveal">
+        Páginas criadas para transformar visitantes em clientes — rápidas, responsivas e com foco em resultado.
+      </p>
+
+      <div class="lp-grid reveal">
+
+        <a href="https://math33451.github.io/landing-page-nathan/" target="_blank" rel="noopener" class="lp-card">
+          <div class="lp-preview">
+            <div class="lp-browser-bar">
+              <span class="lp-dot"></span>
+              <span class="lp-dot"></span>
+              <span class="lp-dot"></span>
+              <span class="lp-url">math33451.github.io/landing-page-nathan</span>
+            </div>
+            <img
+              src="dantas-preview.png"
+              alt="Preview da landing page Dantas Negócios Imobiliários"
+              class="lp-screenshot"
+            />
+          </div>
+          <div class="lp-info">
+            <div class="lp-info-left">
+              <p class="lp-title">Dantas Negócios Imobiliários</p>
+              <p class="lp-desc">Chácaras e terrenos perto de SP. Captação de leads via formulário e WhatsApp.</p>
+              <div class="lp-tags">
+                <span class="projeto-tag">Imobiliário</span>
+                <span class="projeto-tag">Lead gen</span>
+                <span class="projeto-tag">WhatsApp</span>
+              </div>
+            </div>
+            <span class="lp-arrow">↗</span>
+          </div>
+        </a>
+
+        <div class="lp-card lp-placeholder">
+          <div class="lp-preview lp-preview-empty">
+            <div class="lp-browser-bar">
+              <span class="lp-dot"></span>
+              <span class="lp-dot"></span>
+              <span class="lp-dot"></span>
+              <span class="lp-url">seu-projeto.github.io</span>
+            </div>
+            <div class="lp-mock-empty">
+              <span>em breve</span>
+            </div>
+          </div>
+          <div class="lp-info">
+            <div class="lp-info-left">
+              <p class="lp-title">Próximo projeto</p>
+              <p class="lp-desc">Mais landing pages em desenvolvimento. Quer uma para o seu negócio?</p>
+              <div class="lp-tags">
+                <span class="projeto-tag">disponível</span>
+              </div>
+            </div>
+            <a href="#contato" class="lp-cta" onclick="event.stopPropagation()">Solicitar</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ── Contato ───────────────────────────────────────────── -->
+  <section id="contato">
+    <div class="container">
+      <div class="contato-inner">
+        <p class="section-label reveal" style="justify-content:center;">contato</p>
+        <h2 class="reveal">Tem um projeto em mente?</h2>
+        <p class="reveal">
+          Me conta o que você precisa — sistema web, API, automação ou qualquer outra ideia.
+          Respondo em até 24 horas e a conversa inicial é sem compromisso.
+        </p>
+        <div class="contato-links reveal">
+
+          <a href="mailto:murilomatheus20@gmail.com" class="contato-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="2" y="4" width="20" height="16" rx="2"/>
+              <path d="M2 7l10 7 10-7"/>
+            </svg>
+            E-mail
+          </a>
+
+          <a href="https://linkedin.com/in/matheus-bezerra-oliveira" target="_blank" rel="noopener" class="contato-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+              <rect x="2" y="9" width="4" height="12"/>
+              <circle cx="4" cy="4" r="2"/>
+            </svg>
+            LinkedIn
+          </a>
+
+          <a href="https://github.com/math33451" target="_blank" rel="noopener" class="contato-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+            </svg>
+            GitHub
+          </a>
+
+          <a href="tel:+5511957469220" class="contato-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.9 12 19.79 19.79 0 0 1 1.91 3.4 2 2 0 0 1 3.9 1.22h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 8.91A16 16 0 0 0 15.1 15.9l1.05-1.05a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+            </svg>
+            Telefone
+          </a>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Footer ────────────────────────────────────────────── -->
+  <footer>
+    <p>© 2026 Matheus de Oliveira — Desenvolvedor Fullstack</p>
+    <p>Feito em São Paulo</p>
+  </footer>
+
+  <!-- ── Scripts ───────────────────────────────────────────── -->
+  <script>
+    // Hamburger menu
+    const hamburger = document.getElementById('hamburger')
+    const mobileMenu = document.getElementById('mobile-menu')
+
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('open')
+      mobileMenu.classList.toggle('open')
+    })
+
+    function closeMobile() {
+      hamburger.classList.remove('open')
+      mobileMenu.classList.remove('open')
+    }
+
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal')
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), i * 60)
+          observer.unobserve(entry.target)
+        }
+      })
+    }, { threshold: 0.1 })
+
+    reveals.forEach(el => observer.observe(el))
+
+    // Active nav highlight on scroll
+    const sections = document.querySelectorAll('section[id]')
+    const navLinks = document.querySelectorAll('.nav-links a')
+
+    window.addEventListener('scroll', () => {
+      let current = ''
+      sections.forEach(sec => {
+        if (window.scrollY >= sec.offsetTop - 80) current = sec.getAttribute('id')
+      })
+      navLinks.forEach(a => {
+        a.style.color = a.getAttribute('href') === `#${current}` ? 'var(--white)' : ''
+      })
+    })
+  </script>
+
+</body>
+</html>
